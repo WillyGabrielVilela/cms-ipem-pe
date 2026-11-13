@@ -1,0 +1,16 @@
+# PostgreSQL local para desenvolvimento/testes (opcional).
+# Uso: docker compose up -d db  |  DATABASE_URL=postgresql://ipem:ipem_dev@127.0.0.1:5432/ipem_cms
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ipem
+      POSTGRES_PASSWORD: ipem_dev
+      POSTGRES_DB: ipem_cms
+    ports:
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - ipem_pgdata:/var/lib/postgresql/data
+volumes:
+  ipem_pgdata:
