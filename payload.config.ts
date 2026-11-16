@@ -51,24 +51,26 @@ export default buildConfig({
   plugins: [
     // Mídia: disco local por padrão; S3-compatível (MinIO, Ceph, S3) se S3_BUCKET estiver definido.
     s3Storage({
-      enabled: Boolean(env.s3.bucket),
-      // Mantém o esquema do banco idêntico com S3 ligado ou desligado (migrations iguais em todo ambiente).
-      alwaysInsertFields: true,
-      // Upload direto do navegador ao bucket; só quem pode criar mídia recebe URL assinada.
-      clientUploads: env.s3.clientUploads ? { access: ({ req }) => isStaff({ req }) } : false,
-      collections: { media: true },
-      bucket: env.s3.bucket,
-      config: {
-        region: env.s3.region,
-        endpoint: env.s3.endpoint,
-        forcePathStyle: env.s3.forcePathStyle,
-        // O SDK novo da AWS embute na URL assinada o checksum de um corpo vazio, e a AWS então
-        // recusa o upload real do navegador. Só calcula checksum quando o serviço exige.
-        requestChecksumCalculation: 'WHEN_REQUIRED',
-        responseChecksumValidation: 'WHEN_REQUIRED',
-        credentials: { accessKeyId: env.s3.accessKeyId, secretAccessKey: env.s3.secretAccessKey },
-      },
-    }),
+  enabled: Boolean(env.s3.bucket),
+  alwaysInsertFields: true,
+  clientUploads: env.s3.clientUploads
+    ? { access: ({ req }) => isStaff({ req }) }
+    : false,
+  collections: {
+    media: true,
+  },
+  bucket: env.s3.bucket,
+  config: {
+    region: 'us-east-2',
+    forcePathStyle: false,
+    requestChecksumCalculation: 'WHEN_REQUIRED',
+    responseChecksumValidation: 'WHEN_REQUIRED',
+    credentials: {
+      accessKeyId: env.s3.accessKeyId,
+      secretAccessKey: env.s3.secretAccessKey,
+    },
+  },
+}),
   ],
   upload: { limits: { fileSize: 10 * 1024 * 1024 } },
   graphQL: { disable: true }, // integração via REST; reduz a superfície de ataque
