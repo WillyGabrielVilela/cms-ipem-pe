@@ -15,7 +15,7 @@
     "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
     "migrate:status": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:status",
     "payload:generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
-    "payload:generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
+    "payload:generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation S3_BUCKET=importmap S3_CLIENT_UPLOADS=true payload generate:importmap",
     "db:up": "docker compose up -d db",
     "db:down": "docker compose down",
     "create-admin": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/create-admin.ts"

@@ -37,5 +37,13 @@ export const env = {
     accessKeyId: process.env.S3_ACCESS_KEY_ID?.trim() || '',
     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY?.trim() || '',
     forcePathStyle: process.env.S3_FORCE_PATH_STYLE !== 'false',
+    /**
+     * Envio direto do navegador para o bucket (necessário na Vercel, que limita o corpo das
+     * requisições a ~4,5 MB). Padrão: ligado na Vercel, desligado nos demais ambientes.
+     * Exige CORS configurado no bucket (ver docs/ARMAZENAMENTO-S3.md).
+     */
+    clientUploads: process.env.S3_CLIENT_UPLOADS
+      ? process.env.S3_CLIENT_UPLOADS === 'true'
+      : Boolean(process.env.VERCEL),
   },
 }

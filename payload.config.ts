@@ -7,6 +7,7 @@ import { en } from '@payloadcms/translations/languages/en'
 import { pt } from '@payloadcms/translations/languages/pt'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
+import { isStaff } from './src/access'
 import { Media } from './src/collections/Media'
 import { News } from './src/collections/News'
 import { Pages } from './src/collections/Pages'
@@ -51,6 +52,10 @@ export default buildConfig({
     // Mídia: disco local por padrão; S3-compatível (MinIO, Ceph, S3) se S3_BUCKET estiver definido.
     s3Storage({
       enabled: Boolean(env.s3.bucket),
+      // Mantém o esquema do banco idêntico com S3 ligado ou desligado (migrations iguais em todo ambiente).
+      alwaysInsertFields: true,
+      // Upload direto do navegador ao bucket; só quem pode criar mídia recebe URL assinada.
+      clientUploads: env.s3.clientUploads ? { access: ({ req }) => isStaff({ req }) } : false,
       collections: { media: true },
       bucket: env.s3.bucket,
       config: {

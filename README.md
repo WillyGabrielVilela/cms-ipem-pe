@@ -35,7 +35,8 @@ Em ambiente exposto, prefira o script para não deixar essa tela aberta.
 - Neon: use a URL com `sslmode=require`; para migrations/dump prefira a URL direta (sem `-pooler`).
 
 ## Mídia
-Disco local (`media/`, ou `MEDIA_DIR`) por padrão. Para S3-compatível, defina `S3_BUCKET` e credenciais.
+Disco local (`media/`, ou `MEDIA_DIR`) por padrão. Para S3-compatível (obrigatório na Vercel), defina `S3_BUCKET` e
+credenciais. Guia completo, com CORS e troca de provedor: [`docs/ARMAZENAMENTO-S3.md`](docs/ARMAZENAMENTO-S3.md).
 
 ## Comandos
 `dev` · `build` · `start` · `typecheck` · `lint` · `migrate` · `migrate:create` · `migrate:status` ·
