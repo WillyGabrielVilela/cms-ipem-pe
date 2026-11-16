@@ -37,7 +37,19 @@ Nenhum código muda: troque as variáveis `S3_*` e copie o conteúdo do bucket i
 já publicadas não quebram. Se a ATI preferir disco local, remova `S3_BUCKET` e copie os arquivos para `media/`
 (nesse caso, arquivos enviados com envio direto ficam em subpastas por identificador; copie a árvore completa).
 
+## Problemas comuns (envio direto na Vercel)
+| O que aparece | Causa provável |
+|---|---|
+| Console: `blocked by CORS policy` / `No 'Access-Control-Allow-Origin'` no `PUT` para `amazonaws.com` | CORS ausente ou salvo em **outro bucket**; origem diferente do endereço do CMS (barra no final, `http` em vez de `https`); ou `S3_REGION` diferente da região real do bucket (a AWS responde com redirecionamento e o navegador mostra como CORS). |
+| `PUT` com **403** (`AccessDenied`) | Política do IAM com nome de bucket diferente do `S3_BUCKET`, ou política não anexada ao usuário. |
+| `NoSuchBucket` | Nome do bucket errado ou região errada. |
+| `SignatureDoesNotMatch` ao **abrir a URL no navegador** | Esperado: a URL é de envio (`PUT`) e só funciona assim. Não é o erro real. |
+| Endereço de envio ainda mostra o bucket antigo | Variável alterada sem **Redeploy**, ou salva em outro ambiente da Vercel. |
+Para ver o erro real: F12, aba Network, filtrar por `amazonaws`, abrir a linha do `PUT` e ler a aba Response.
+
 ## Pontos de atenção
+- O CMS configura o cliente S3 com `requestChecksumCalculation: 'WHEN_REQUIRED'`. Sem isso, o SDK novo da AWS
+  embute na URL assinada o checksum de um corpo vazio e a AWS recusa o upload real. Não remova.
 - Quem tem login de equipe pode obter uma URL assinada para qualquer tipo de arquivo; porém o CMS só registra
   como mídia o que passa pela validação (imagem/PDF) e processamento. Para não acumular arquivos órfãos, configure
   no bucket uma regra de ciclo de vida para expirar objetos antigos não referenciados, se o provedor oferecer.

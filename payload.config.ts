@@ -62,6 +62,10 @@ export default buildConfig({
         region: env.s3.region,
         endpoint: env.s3.endpoint,
         forcePathStyle: env.s3.forcePathStyle,
+        // O SDK novo da AWS embute na URL assinada o checksum de um corpo vazio, e a AWS então
+        // recusa o upload real do navegador. Só calcula checksum quando o serviço exige.
+        requestChecksumCalculation: 'WHEN_REQUIRED',
+        responseChecksumValidation: 'WHEN_REQUIRED',
         credentials: { accessKeyId: env.s3.accessKeyId, secretAccessKey: env.s3.secretAccessKey },
       },
     }),
